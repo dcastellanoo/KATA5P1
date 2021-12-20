@@ -19,21 +19,17 @@ public class Kata5 {
             System.out.println(e.getMessage());
         }
         
-        // Se seleccionan todos los registros de la tabla PEOPLE
-        String sql = "SELECT * FROM People";
-        try (Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql)){
-            // Bucle sobre el conjunto de registros.
-            while (rs.next()) {
-                System.out.println(rs.getInt("Id") + "\t" +
-                rs.getString("Name") + "\t" +
-                rs.getString("Apellidos") + "\t" +
-                rs.getString("Departamento") + "\t");
-            }
+        // Instrucción SQL para crear nueva tabla
+        String sql = "CREATE TABLE IF NOT EXISTS EMAIL (\n"
+                    + " Id integer PRIMARY KEY AUTOINCREMENT,\n"
+                    + " Mail text NOT NULL);";
+        try (Statement stmt = conn.createStatement()) {
+        // Se crea la nueva tabla
+        stmt.execute(sql);
+        System.out.println("Tabla creada");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
-
+        } 
     }
 }
 

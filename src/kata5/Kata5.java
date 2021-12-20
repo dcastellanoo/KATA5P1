@@ -2,9 +2,12 @@ package kata5;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import static kata5.MailListReader.read;
 
 public class Kata5 {
 
@@ -19,17 +22,18 @@ public class Kata5 {
             System.out.println(e.getMessage());
         }
         
-        // Instrucción SQL para crear nueva tabla
-        String sql = "CREATE TABLE IF NOT EXISTS EMAIL (\n"
-                    + " Id integer PRIMARY KEY AUTOINCREMENT,\n"
-                    + " Mail text NOT NULL);";
-        try (Statement stmt = conn.createStatement()) {
-        // Se crea la nueva tabla
-        stmt.execute(sql);
-        System.out.println("Tabla creada");
+        //
+        List<String> emails = read("email.txt");
+        
+        String sql = "INSERT INTO EMAIL(Mail) VALUES(?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            for (String email : emails) {
+                pstmt.setString(1, email);
+                pstmt.executeUpdate();
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } 
+        }
     }
 }
 
